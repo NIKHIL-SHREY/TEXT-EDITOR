@@ -4,7 +4,7 @@ import sys
 
 class texteditor(QMainWindow):
     def __init__(self):
-        super(Main, self).__init__()
+        super(texteditor, self).__init__()
         loadUi("main.ui", self)
 
 if __name__ == "__main__":
