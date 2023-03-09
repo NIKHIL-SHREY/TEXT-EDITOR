@@ -22,14 +22,17 @@ class texteditor(QMainWindow):
         self.actionMode.triggered.connect(self.modes)
     
     def newFile(self):
-        print("clicked on new file")
+        self.textEdit.clear()
+        self.setWindowTitle("Untitled")
+        self.current_path = None
+
         
     def openFile(self):
         print("clicked on open file")
         
     def saveFile(self):
-    	print("clicked on save file")
-    
+    	 
+                
     def saveFileAs(self):
     	print("clicked on save file as")
   
