@@ -22,7 +22,7 @@ class texteditor(QMainWindow):
         self.actionMode.triggered.connect(self.modes)
     
     def newFile(self):
-        print("clicked on open file")
+        print("clicked on new file")
         
     def openFile(self):
         print("clicked on open file")
@@ -46,7 +46,7 @@ class texteditor(QMainWindow):
     	print("clicked on redo")
         
     def cut(self):
-    	print("clicked on cut")
+    	self.textEdit.cut()
     
     def copy(self):
     	self.textEdit.copy()
