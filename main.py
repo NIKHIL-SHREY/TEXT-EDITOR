@@ -52,7 +52,7 @@ class texteditor(QMainWindow):
     	self.textEdit.copy()
         
     def paste(self):
-    	print("clicked on paste")
+    	self.textEdit.paste()
         
     def layouts(self):
     	print("clicked on layouts")
