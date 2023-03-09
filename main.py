@@ -31,7 +31,11 @@ class texteditor(QMainWindow):
         print("clicked on open file")
         
     def saveFile(self):
-    	 
+        if self.current_path is not None:
+            # save the changes without opening dialog
+           filetext = self.textEdit.toPlainText()
+           with open(self.current_path, 'w') as f:
+               f.write(filetext)
                 
     def saveFileAs(self):
     	print("clicked on save file as")
