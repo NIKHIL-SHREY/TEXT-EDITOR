@@ -49,7 +49,7 @@ class texteditor(QMainWindow):
     	print("clicked on cut")
     
     def copy(self):
-    	print("clicked on copy")
+    	self.textEdit.copy()
         
     def paste(self):
     	print("clicked on paste")
