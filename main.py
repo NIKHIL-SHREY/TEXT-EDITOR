@@ -57,7 +57,7 @@ class texteditor(QMainWindow):
     	print("clicked on close file")
         
     def undo(self):
-    	print("clicked on undo")
+    	self.textEdit.undo()
     
     def redo(self):
     	print("clicked on redo")
