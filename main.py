@@ -1,7 +1,10 @@
-from PyQt5.QtWidgets import QMainWindow, QApplication , QFileDialog, QAction
-from PyQt5.QtPrintSupport import QPrinter, QPrintDialog
+
+from PyQt5.QtWidgets import QMainWindow, QApplication, QFileDialog,Qmessagebox,QAction
 from PyQt5.uic import loadUi
+from PyQt5.QtPrintSupport import QPrinter,QPrintDialog,QPrintPreviewDialog
+from PyQt5.QtCore import QFileInfo
 import sys
+
 
 class texteditor(QMainWindow):
     def __init__(self):
@@ -20,11 +23,13 @@ class texteditor(QMainWindow):
         self.actionCut.triggered.connect(self.cut)
         self.actionCopy.triggered.connect(self.copy)
         self.actionPaste.triggered.connect(self.paste)
+        self.actionExport_PDF.triggered.connect(self.exportPdf)
+    	  self.actionPrint_Preview.triggered.connect(self.printPreview)
         self.setWindowTitle("Untitled")
         self.current_path = None
         self.statusBar().showMessage("Ready")
         self.actionDark_Mode.triggered.connect(self.darkMode)
-    
+        
     def newFile(self):
         self.textEdit.clear()
         self.setWindowTitle("Untitled")
@@ -86,7 +91,25 @@ class texteditor(QMainWindow):
         
     def paste(self):
     	self.textEdit.paste()
-        
+    
+    def exportPdf(self):
+    		fn, _  =QfileDialog.getSaveFileName(self,"Export PDF",None,"PDF files (.pdf) ;; All Files")
+        if fn !="":
+        		if QFileInfo(fn).suffix()=="" :fn += '.pdf'
+            printer=QPrinter(Qprinter.HighResolution)
+            printer.setOutputFormat(QPrinter.PdfFormat)
+            printer.setOutputFileName(fn)
+            self.textEdit.document().print_(printer)
+    
+    def printPreview(self):
+    		printer=QPrinter(QPrinter.HighResolution)
+        previewDialog=QPrintPreviewDialog(printer,self)
+        previewDialog.paintRequested.connect(self.printPreview)
+        previewDialog.exec()
+    
+    def printPreview(self,printer):
+    		self.textEdit.print_(printer)
+
     def darkMode(self, checked):
         if checked:
             self.setStyleSheet('''QWIdget{
@@ -101,7 +124,7 @@ class texteditor(QMainWindow):
                 }''')
         else:
             self.setStyleSheet("")
-    	
+
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     ui = texteditor()
