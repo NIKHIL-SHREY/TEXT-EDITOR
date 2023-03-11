@@ -24,6 +24,7 @@ class texteditor(QMainWindow):
         self.actionLayouts.triggered.connect(self.layouts)
         self.actionMode.triggered.connect(self.modes)
     	self.actionExport_PDF.triggered.connect(self.exportPdf)
+    	self.actionPrint_Preview.triggered.connect(self.printPreview)
     	
     def newFile(self):
         self.textEdit.clear()
@@ -79,7 +80,15 @@ class texteditor(QMainWindow):
             printer.setOutputFormat(QPrinter.PdfFormat)
             printer.setOutputFileName(fn)
             self.textEdit.document().print_(printer)
-    	
+    
+    def printPreview(self):
+    		printer=QPrinter(QPrinter.HighResolution)
+        previewDialog=QPrintPreviewDialog(printer,self)
+        previewDialog.paintRequested.connect(self.printPreview)
+        previewDialog.exec()
+    
+    def printPreview(self,printer):
+    		self.textEdit.print_(printer)
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     ui = texteditor()
