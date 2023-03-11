@@ -25,6 +25,11 @@ class texteditor(QMainWindow):
         self.statusBar().showMessage("Ready")
         self.actionDark_Mode.triggered.connect(self.darkMode)
     
+        self.actionLayouts.triggered.connect(self.layouts)
+        self.actionMode.triggered.connect(self.modes)
+    	self.actionExport_PDF.triggered.connect(self.exportPdf)
+    	
+
     def newFile(self):
         self.textEdit.clear()
         self.setWindowTitle("Untitled")
@@ -101,6 +106,20 @@ class texteditor(QMainWindow):
                 }''')
         else:
             self.setStyleSheet("")
+    def layouts(self):
+    	print("clicked on layouts")
+        
+    def modes(self):
+    	print("clicked on modes")
+    
+    def exportPdf(self):
+    		fn, _  =QfileDialog.getSaveFileName(self,"Export PDF",None,"PDF files (.pdf) ;; All Files")
+        if fn !="":
+        		if QFileInfo(fn).suffix()=="" :fn += '.pdf'
+            printer=QPrinter(Qprinter.HighResolution)
+            printer.setOutputFormat(QPrinter.PdfFormat)
+            printer.setOutputFileName(fn)
+            self.textEdit.document().print_(printer)
     	
 if __name__ == "__main__":
     app = QApplication(sys.argv)
