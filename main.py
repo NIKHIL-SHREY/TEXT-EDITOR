@@ -38,7 +38,12 @@ class texteditor(QMainWindow):
                f.write(filetext)
                 
     def saveFileAs(self):
-    	print("clicked on save file as")
+    	pathname = QFileDialog.getSaveFileName(self, 'Save file', 'home\Documents', 'Text files(*.txt)')
+        filetext = self.textEdit.toPlainText()
+        with open(pathname[0], 'w') as f:
+            f.write(filetext)
+        self.current_path = pathname[0]
+        self.setWindowTitle(pathname[0])
   
     def printFile(self):
     	print("clicked on print file")
