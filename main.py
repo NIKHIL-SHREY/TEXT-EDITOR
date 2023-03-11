@@ -1,4 +1,5 @@
-from PyQt5.QtWidgets import QMainWindow, QApplication, QFileDialog,Qmessagebox
+
+from PyQt5.QtWidgets import QMainWindow, QApplication, QFileDialog,Qmessagebox,QAction
 from PyQt5.uic import loadUi
 from PyQt5.QtPrintSupport import QPrinter,QPrintDialog,QPrintPreviewDialog
 from PyQt5.QtCore import QFileInfo
@@ -10,6 +11,7 @@ class texteditor(QMainWindow):
         super(texteditor, self).__init__()
         loadUi("main.ui", self)
         
+        self.textEdit.textChanged.connect(self.countWords)
         self.actionNew.triggered.connect(self.newFile)
         self.actionOpen.triggered.connect(self.openFile)
         self.actionSave.triggered.connect(self.saveFile)
@@ -21,11 +23,13 @@ class texteditor(QMainWindow):
         self.actionCut.triggered.connect(self.cut)
         self.actionCopy.triggered.connect(self.copy)
         self.actionPaste.triggered.connect(self.paste)
-        self.actionLayouts.triggered.connect(self.layouts)
-        self.actionMode.triggered.connect(self.modes)
-    	self.actionExport_PDF.triggered.connect(self.exportPdf)
-    	self.actionPrint_Preview.triggered.connect(self.printPreview)
-    	
+        self.actionExport_PDF.triggered.connect(self.exportPdf)
+    	  self.actionPrint_Preview.triggered.connect(self.printPreview)
+        self.setWindowTitle("Untitled")
+        self.current_path = None
+        self.statusBar().showMessage("Ready")
+        self.actionDark_Mode.triggered.connect(self.darkMode)
+        
     def newFile(self):
         self.textEdit.clear()
         self.setWindowTitle("Untitled")
@@ -33,29 +37,51 @@ class texteditor(QMainWindow):
 
         
     def openFile(self):
-        print("clicked on open file")
+        fname = QFileDialog.getOpenFileName(self, 'Open file', 'home\Documents', 'Text files (*.txt)')
+        self.setWindowTitle(fname[0])
+        with open(fname[0], 'r') as f:
+            filetext = f.read()
+            self.textEdit.setText(filetext)
+        self.current_path = fname[0]
         
     def saveFile(self):
         if self.current_path is not None:
             # save the changes without opening dialog
-           filetext = self.textEdit.toPlainText()
-           with open(self.current_path, 'w') as f:
-               f.write(filetext)
-                
+            filetext = self.textEdit.toPlainText()
+            with open(self.current_path, 'w') as f:
+                f.write(filetext)
+        else:
+            self.saveFileAs()
+      
     def saveFileAs(self):
-    	print("clicked on save file as")
-  
+    	default_name = "Untitled"
+    	pathname = QFileDialog.getSaveFileName(self, 'Save file',default_name , 'Text files(*.txt)')
+        filetext = self.textEdit.toPlainText()
+        with open(pathname[0], 'w') as f:
+            f.write(filetext)
+        self.current_path = pathname[0]
+        self.setWindowTitle(pathname[0])
+        
+    def countWords(self):
+    	text = self.textEdit.toPlainText()
+    	word_count = len(text.split())
+    	self.statusBar().showMessage("Word count: "+str(word_count))
+    	  
     def printFile(self):
-    	print("clicked on print file")
+    	printer = QPrinter(QPrinter.HighResolution)
+    	dialog = QPrintDialog(printer, self)
+    	
+    	if dialog.exec_() == QPrintDialog.Accepted:
+    	    self.textEdit.print_(printer)
     
     def closeFile(self):
-    	print("clicked on close file")
+        self.close()
         
     def undo(self):
-    	print("clicked on undo")
+    	self.textEdit.undo()
     
     def redo(self):
-    	print("clicked on redo")
+    	self.textEdit.redo()
         
     def cut(self):
     	self.textEdit.cut()
@@ -65,12 +91,6 @@ class texteditor(QMainWindow):
         
     def paste(self):
     	self.textEdit.paste()
-        
-    def layouts(self):
-    	print("clicked on layouts")
-        
-    def modes(self):
-    	print("clicked on modes")
     
     def exportPdf(self):
     		fn, _  =QfileDialog.getSaveFileName(self,"Export PDF",None,"PDF files (.pdf) ;; All Files")
@@ -89,6 +109,22 @@ class texteditor(QMainWindow):
     
     def printPreview(self,printer):
     		self.textEdit.print_(printer)
+
+    def darkMode(self, checked):
+        if checked:
+            self.setStyleSheet('''QWIdget{
+                background-color: rgb(33,33,33);
+                color: #FFFFFF;
+                }
+                QTextEdit{
+                background-color: rgb(46,46,46);
+                }
+                QMenuBar::item:selected{
+                color: #000000
+                }''')
+        else:
+            self.setStyleSheet("")
+
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     ui = texteditor()
