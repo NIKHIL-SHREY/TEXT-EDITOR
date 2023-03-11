@@ -1,4 +1,5 @@
 from PyQt5.QtWidgets import QMainWindow, QApplication , QFileDialog
+from PyQt5.QtPrintSupport import QPrinter, QPrintDialog
 from PyQt5.uic import loadUi
 import sys
 
@@ -43,10 +44,12 @@ class texteditor(QMainWindow):
     def saveFile(self):
         if self.current_path is not None:
             # save the changes without opening dialog
-           filetext = self.textEdit.toPlainText()
-           with open(self.current_path, 'w') as f:
-               f.write(filetext)
-                
+            filetext = self.textEdit.toPlainText()
+            with open(self.current_path, 'w') as f:
+                f.write(filetext)
+        else:
+            self.saveFileAs()
+      
     def saveFileAs(self):
     	default_name = "Untitled"
     	pathname = QFileDialog.getSaveFileName(self, 'Save file',default_name , 'Text files(*.txt)')
@@ -62,10 +65,14 @@ class texteditor(QMainWindow):
     	self.statusBar().showMessage("Word count: "+str(word_count))
     	  
     def printFile(self):
-    	print("clicked on print file")
+    	printer = QPrinter(QPrinter.HighResolution)
+    	dialog = QPrintDialog(printer, self)
+    	
+    	if dialog.exec_() == QPrintDialog.Accepted:
+    	    self.textEdit.print_(printer)
     
     def closeFile(self):
-    	print("clicked on close file")
+        self.close()
         
     def undo(self):
     	self.textEdit.undo()
