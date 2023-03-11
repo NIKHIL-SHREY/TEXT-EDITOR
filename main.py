@@ -28,7 +28,12 @@ class texteditor(QMainWindow):
 
         
     def openFile(self):
-        print("clicked on open file")
+        fname = QFileDialog.getOpenFileName(self, 'Open file', 'home\Documents', 'Text files (*.txt)')
+        self.setWindowTitle(fname[0])
+        with open(fname[0], 'r') as f:
+            filetext = f.read()
+            self.textEdit.setText(filetext)
+        self.current_path = fname[0]
         
     def saveFile(self):
         if self.current_path is not None:
