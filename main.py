@@ -1,5 +1,5 @@
 
-from PyQt5.QtWidgets import QMainWindow, QApplication, QFileDialog,Qmessagebox,QAction
+from PyQt5.QtWidgets import QMainWindow, QApplication, QFileDialog, QMessageBox, QAction
 from PyQt5.uic import loadUi
 from PyQt5.QtPrintSupport import QPrinter,QPrintDialog,QPrintPreviewDialog
 from PyQt5.QtCore import QFileInfo
@@ -24,7 +24,7 @@ class texteditor(QMainWindow):
         self.actionCopy.triggered.connect(self.copy)
         self.actionPaste.triggered.connect(self.paste)
         self.actionExport_PDF.triggered.connect(self.exportPdf)
-    	  self.actionPrint_Preview.triggered.connect(self.printPreview)
+        self.actionPrint_Preview.triggered.connect(self.printPreviewDialog)
         self.setWindowTitle("Untitled")
         self.current_path = None
         self.statusBar().showMessage("Ready")
@@ -56,11 +56,11 @@ class texteditor(QMainWindow):
     def saveFileAs(self):
     	default_name = "Untitled"
     	pathname = QFileDialog.getSaveFileName(self, 'Save file',default_name , 'Text files(*.txt)')
-        filetext = self.textEdit.toPlainText()
-        with open(pathname[0], 'w') as f:
-            f.write(filetext)
-        self.current_path = pathname[0]
-        self.setWindowTitle(pathname[0])
+    	filetext = self.textEdit.toPlainText()
+    	with open(pathname[0], 'w') as f:
+    	    f.write(filetext)
+    	self.current_path = pathname[0]
+    	self.setWindowTitle(pathname[0])
         
     def countWords(self):
     	text = self.textEdit.toPlainText()
@@ -93,22 +93,22 @@ class texteditor(QMainWindow):
     	self.textEdit.paste()
     
     def exportPdf(self):
-    		fn, _  =QfileDialog.getSaveFileName(self,"Export PDF",None,"PDF files (.pdf) ;; All Files")
+        fn, _  =QFileDialog.getSaveFileName(self,"Export PDF",None,"PDF files (.pdf) ;; All Files")
         if fn !="":
-        		if QFileInfo(fn).suffix()=="" :fn += '.pdf'
+            if QFileInfo(fn).suffix()=="" :fn += '.pdf'
             printer=QPrinter(Qprinter.HighResolution)
             printer.setOutputFormat(QPrinter.PdfFormat)
             printer.setOutputFileName(fn)
             self.textEdit.document().print_(printer)
     
-    def printPreview(self):
-    		printer=QPrinter(QPrinter.HighResolution)
+    def printPreviewDialog(self):
+        printer=QPrinter(QPrinter.HighResolution)
         previewDialog=QPrintPreviewDialog(printer,self)
         previewDialog.paintRequested.connect(self.printPreview)
         previewDialog.exec()
     
     def printPreview(self,printer):
-    		self.textEdit.print_(printer)
+        self.textEdit.print_(printer)
 
     def darkMode(self, checked):
         if checked:
