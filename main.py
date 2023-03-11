@@ -1,6 +1,9 @@
-from PyQt5.QtWidgets import QMainWindow, QApplication
+from PyQt5.QtWidgets import QMainWindow, QApplication, QFileDialog,Qmessagebox
 from PyQt5.uic import loadUi
+from PyQt5.QtPrintSupport import QPrinter,QPrintDialog,QPrintPreviewDialog
+from PyQt5.QtCore import QFileInfo
 import sys
+
 
 class texteditor(QMainWindow):
     def __init__(self):
