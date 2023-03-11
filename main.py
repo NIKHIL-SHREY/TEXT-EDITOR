@@ -60,7 +60,7 @@ class texteditor(QMainWindow):
     	self.textEdit.undo()
     
     def redo(self):
-    	print("clicked on redo")
+    	self.textEdit.redo()
         
     def cut(self):
     	self.textEdit.cut()
