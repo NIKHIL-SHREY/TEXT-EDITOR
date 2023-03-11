@@ -28,7 +28,12 @@ class texteditor(QMainWindow):
 
         
     def openFile(self):
-        print("clicked on open file")
+        fname = QFileDialog.getOpenFileName(self, 'Open file', 'home\Documents', 'Text files (*.txt)')
+        self.setWindowTitle(fname[0])
+        with open(fname[0], 'r') as f:
+            filetext = f.read()
+            self.textEdit.setText(filetext)
+        self.current_path = fname[0]
         
     def saveFile(self):
         if self.current_path is not None:
@@ -38,7 +43,12 @@ class texteditor(QMainWindow):
                f.write(filetext)
                 
     def saveFileAs(self):
-    	print("clicked on save file as")
+    	pathname = QFileDialog.getSaveFileName(self, 'Save file', 'home\Documents', 'Text files(*.txt)')
+        filetext = self.textEdit.toPlainText()
+        with open(pathname[0], 'w') as f:
+            f.write(filetext)
+        self.current_path = pathname[0]
+        self.setWindowTitle(pathname[0])
   
     def printFile(self):
     	print("clicked on print file")
@@ -47,10 +57,10 @@ class texteditor(QMainWindow):
     	print("clicked on close file")
         
     def undo(self):
-    	print("clicked on undo")
+    	self.textEdit.undo()
     
     def redo(self):
-    	print("clicked on redo")
+    	self.textEdit.redo()
         
     def cut(self):
     	self.textEdit.cut()
