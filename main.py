@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QMainWindow, QApplication , QFileDialog
+from PyQt5.QtWidgets import QMainWindow, QApplication , QFileDialog, QAction
 from PyQt5.QtPrintSupport import QPrinter, QPrintDialog
 from PyQt5.uic import loadUi
 import sys
@@ -20,12 +20,10 @@ class texteditor(QMainWindow):
         self.actionCut.triggered.connect(self.cut)
         self.actionCopy.triggered.connect(self.copy)
         self.actionPaste.triggered.connect(self.paste)
-        self.actionLayouts.triggered.connect(self.layouts)
-        self.actionMode.triggered.connect(self.modes)
-        
         self.setWindowTitle("Untitled")
         self.current_path = None
         self.statusBar().showMessage("Ready")
+        self.actionDark_Mode.triggered.connect(self.darkMode)
     
     def newFile(self):
         self.textEdit.clear()
@@ -89,11 +87,20 @@ class texteditor(QMainWindow):
     def paste(self):
     	self.textEdit.paste()
         
-    def layouts(self):
-    	print("clicked on layouts")
-        
-    def modes(self):
-    	print("clicked on modes")
+    def darkMode(self, checked):
+        if checked:
+            self.setStyleSheet('''QWIdget{
+                background-color: rgb(33,33,33);
+                color: #FFFFFF;
+                }
+                QTextEdit{
+                background-color: rgb(46,46,46);
+                }
+                QMenuBar::item:selected{
+                color: #000000
+                }''')
+        else:
+            self.setStyleSheet("")
     	
 if __name__ == "__main__":
     app = QApplication(sys.argv)
