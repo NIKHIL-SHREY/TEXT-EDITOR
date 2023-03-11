@@ -8,6 +8,7 @@ class texteditor(QMainWindow):
         super(texteditor, self).__init__()
         loadUi("main.ui", self)
         
+        self.textEdit.textChanged.connect(self.countWords)
         self.actionNew.triggered.connect(self.newFile)
         self.actionOpen.triggered.connect(self.openFile)
         self.actionSave.triggered.connect(self.saveFile)
@@ -21,6 +22,10 @@ class texteditor(QMainWindow):
         self.actionPaste.triggered.connect(self.paste)
         self.actionLayouts.triggered.connect(self.layouts)
         self.actionMode.triggered.connect(self.modes)
+        
+        self.setWindowTitle("Untitled")
+        self.current_path = None
+        self.statusBar().showMessage("Ready")
     
     def newFile(self):
         self.textEdit.clear()
@@ -46,13 +51,19 @@ class texteditor(QMainWindow):
             self.saveFileAs()
       
     def saveFileAs(self):
-        pathname = QFileDialog.getSaveFileName(self, 'Save file', 'home\Documents', 'Textfiles(*.txt)')
+    	default_name = "Untitled"
+    	pathname = QFileDialog.getSaveFileName(self, 'Save file',default_name , 'Text files(*.txt)')
         filetext = self.textEdit.toPlainText()
         with open(pathname[0], 'w') as f:
             f.write(filetext)
         self.current_path = pathname[0]
         self.setWindowTitle(pathname[0])
-  
+        
+    def countWords(self):
+    	text = self.textEdit.toPlainText()
+    	word_count = len(text.split())
+    	self.statusBar().showMessage("Word count: "+str(word_count))
+    	  
     def printFile(self):
     	printer = QPrinter(QPrinter.HighResolution)
     	dialog = QPrintDialog(printer, self)
