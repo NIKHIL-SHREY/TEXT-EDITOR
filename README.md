@@ -12,7 +12,8 @@
 
 - Installing dependencies and running code
     - ``pip install PyQt5``
-    - ``pip install PyQt5``
+    - ``sudo apt-get install qttoools5-dev-tools``
+    - ``sudo apt-get install qttoools5-dev``
     - ``python3 main.py``
     
 A text editor refers to any form of computer program that enables users to create, change, edit, open and view plain text files.
