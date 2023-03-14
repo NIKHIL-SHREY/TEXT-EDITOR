@@ -65,6 +65,16 @@
     <property name="title">
      <string>Tools</string>
     </property>
+    <widget class="QMenu" name="menuFont_Size">
+     <property name="title">
+      <string>Font Size</string>
+     </property>
+     <addaction name="actionIncrease_Font_Size"/>
+     <addaction name="actionDecrease_Font_Size"/>
+    </widget>
+    <addaction name="menuFont_Size"/>
+    <addaction name="actionBold"/>
+    <addaction name="actionItalic"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
@@ -252,6 +262,26 @@
   <action name="actionExport_PDF">
    <property name="text">
     <string>Export PDF</string>
+   </property>
+  </action>
+  <action name="actionBold">
+   <property name="text">
+    <string>Bold</string>
+   </property>
+  </action>
+  <action name="actionItalic">
+   <property name="text">
+    <string>Italic</string>
+   </property>
+  </action>
+  <action name="actionIncrease_Font_Size">
+   <property name="text">
+    <string>Increase Font Size</string>
+   </property>
+  </action>
+  <action name="actionDecrease_Font_Size">
+   <property name="text">
+    <string>Decrease Font Size</string>
    </property>
   </action>
  </widget>
