@@ -1,4 +1,4 @@
-# TEXT-EDITORR
+# TEXT-EDITOR
 
 ## Usage:
 - Usage via Git:
