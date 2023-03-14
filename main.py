@@ -1,7 +1,10 @@
-from PyQt5.QtWidgets import QMainWindow, QApplication , QFileDialog, QAction
-from PyQt5.QtPrintSupport import QPrinter, QPrintDialog
+from PyQt5.QtWidgets import QMainWindow, QApplication, QFileDialog, QMessageBox, QAction, QFontDIalog
 from PyQt5.uic import loadUi
+from PyQt5.QtPrintSupport import QPrinter,QPrintDialog,QPrintPreviewDialog
+from PyQt5.QtCore import QFileInfo
+from PyQt5.QtGui import QFont, QTextCursor
 import sys
+
 
 class texteditor(QMainWindow):
     def __init__(self):
@@ -20,16 +23,17 @@ class texteditor(QMainWindow):
         self.actionCut.triggered.connect(self.cut)
         self.actionCopy.triggered.connect(self.copy)
         self.actionPaste.triggered.connect(self.paste)
+        self.actionExport_PDF.triggered.connect(self.exportPdf)
+        self.actionPrint_Preview.triggered.connect(self.printPreviewDialog)
         self.setWindowTitle("Untitled")
         self.current_path = None
         self.statusBar().showMessage("Ready")
         self.actionDark_Mode.triggered.connect(self.darkMode)
-    
-        self.actionLayouts.triggered.connect(self.layouts)
-        self.actionMode.triggered.connect(self.modes)
-    	self.actionExport_PDF.triggered.connect(self.exportPdf)
-    	
-
+        self.actionIncrease_Font_Size.triggered.connect(self.increaseFontSize)
+        self.actionDecrease_Font_Size.triggered.connect(self.decreaseFontSize)
+        self.actionBold.triggered.connect(self.toggleBold)
+        self.actionItalic.triggered.connect(self.toggleItalic)
+        
     def newFile(self):
         self.textEdit.clear()
         self.setWindowTitle("Untitled")
@@ -56,11 +60,11 @@ class texteditor(QMainWindow):
     def saveFileAs(self):
     	default_name = "Untitled"
     	pathname = QFileDialog.getSaveFileName(self, 'Save file',default_name , 'Text files(*.txt)')
-        filetext = self.textEdit.toPlainText()
-        with open(pathname[0], 'w') as f:
-            f.write(filetext)
-        self.current_path = pathname[0]
-        self.setWindowTitle(pathname[0])
+    	filetext = self.textEdit.toPlainText()
+    	with open(pathname[0], 'w') as f:
+    	    f.write(filetext)
+    	self.current_path = pathname[0]
+    	self.setWindowTitle(pathname[0])
         
     def countWords(self):
     	text = self.textEdit.toPlainText()
@@ -91,7 +95,25 @@ class texteditor(QMainWindow):
         
     def paste(self):
     	self.textEdit.paste()
-        
+
+    def exportPdf(self):
+        fn, _  =QFileDialog.getSaveFileName(self,"Export PDF",None,"PDF files (.pdf) ;; All Files")
+        if fn !="":
+            if QFileInfo(fn).suffix()=="" :fn += '.pdf'
+            printer=QPrinter(Qprinter.HighResolution)
+            printer.setOutputFormat(QPrinter.PdfFormat)
+            printer.setOutputFileName(fn)
+            self.textEdit.document().print_(printer)
+    
+    def printPreviewDialog(self):
+        printer=QPrinter(QPrinter.HighResolution)
+        previewDialog=QPrintPreviewDialog(printer,self)
+        previewDialog.paintRequested.connect(self.printPreview)
+        previewDialog.exec()
+    
+    def printPreview(self,printer):
+        self.textEdit.print_(printer)
+
     def darkMode(self, checked):
         if checked:
             self.setStyleSheet('''QWIdget{
@@ -106,21 +128,30 @@ class texteditor(QMainWindow):
                 }''')
         else:
             self.setStyleSheet("")
-    def layouts(self):
-    	print("clicked on layouts")
-        
-    def modes(self):
-    	print("clicked on modes")
     
-    def exportPdf(self):
-    		fn, _  =QfileDialog.getSaveFileName(self,"Export PDF",None,"PDF files (.pdf) ;; All Files")
-        if fn !="":
-        		if QFileInfo(fn).suffix()=="" :fn += '.pdf'
-            printer=QPrinter(Qprinter.HighResolution)
-            printer.setOutputFormat(QPrinter.PdfFormat)
-            printer.setOutputFileName(fn)
-            self.textEdit.document().print_(printer)
-    	
+    def increaseFontSize(self):
+        font = self.textEdit.font()
+        size = font.pointSize()+1
+        font.setPontSize(size)
+        self.textEdit.setFont(font)
+        
+    def decreaseFontSize(self):
+        font = self.textEdit.font()
+        size = font.pointSize()-1
+        font.setPontSize(size)
+        self.textEdit.setFont(font)
+        
+    def toggleBold(self):
+        font = self.textEdit.font()
+        font.setBold(not font.bold())
+        self.textEdit.setFont(font)
+        
+    def toggleItalic(self):
+        font = self.textEdit.font()
+        font.setItalic(not font.italic())
+        self.textEdit.setFont(font)
+
+
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     ui = texteditor()
