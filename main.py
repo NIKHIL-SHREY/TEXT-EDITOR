@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QMainWindow, QApplication, QFileDialog, QMessageBox, QAction, QFontDIalog
+from PyQt5.QtWidgets import QMainWindow, QApplication, QFileDialog, QMessageBox, QAction, QFontDialog
 from PyQt5.uic import loadUi
 from PyQt5.QtPrintSupport import QPrinter,QPrintDialog,QPrintPreviewDialog
 from PyQt5.QtCore import QFileInfo
